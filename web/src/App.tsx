@@ -77,7 +77,7 @@ function Main({ ds, dark, toggleDark }: { ds: Dataset; dark: boolean; toggleDark
             />
           </>
         ) : (
-          <AnalysisView ds={ds} dark={dark} />
+          <AnalysisView ds={ds} dark={dark} onSelect={setSelected} isWatched={watch.has} onToggleWatch={watch.toggle} />
         )}
       </div>
 

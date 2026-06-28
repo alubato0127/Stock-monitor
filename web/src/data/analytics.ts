@@ -134,6 +134,66 @@ export function dashboard(
   }
 }
 
+export interface SecurityEvent {
+  date: string
+  code: string
+  name: string
+  type: 'new' | 'exit'
+  shares: number
+  lots: number
+}
+
+/** Timeline of 新進/出清 events across all trading days (newest first). */
+export function events(ds: Dataset): SecurityEvent[] {
+  const dates = tradingDates(ds)
+  const out: SecurityEvent[] = []
+  for (let i = 1; i < dates.length; i++) {
+    const prev = holdingsMap(ds, dates[i - 1])
+    const cur = holdingsMap(ds, dates[i])
+    for (const [code, h] of cur)
+      if (!prev.has(code))
+        out.push({ date: dates[i], code, name: ds.securities[code] ?? code, type: 'new', shares: h.shares, lots: h.shares / 1000 })
+    for (const [code, h] of prev)
+      if (!cur.has(code))
+        out.push({ date: dates[i], code, name: ds.securities[code] ?? code, type: 'exit', shares: h.shares, lots: h.shares / 1000 })
+  }
+  return out.reverse()
+}
+
+export interface SectorAgg {
+  sector: string
+  weight: number // % at compare date
+  prevWeight: number // % at base date
+  dWeight: number
+  count: number // # holdings in sector at compare date
+}
+
+/** Aggregate holdings weight by industry for base vs compare date. */
+export function sectorAgg(
+  ds: Dataset,
+  sectors: Record<string, string>,
+  baseDate: string,
+  compareDate: string,
+): SectorAgg[] {
+  const acc = new Map<string, { w: number; pw: number; n: number }>()
+  const add = (sec: string, key: 'w' | 'pw' | 'n', v: number) => {
+    const cur = acc.get(sec) ?? { w: 0, pw: 0, n: 0 }
+    cur[key] += v
+    acc.set(sec, cur)
+  }
+  for (const r of ds.holdings_by_date[compareDate] || []) {
+    const sec = sectors[r[0]] ?? '未分類'
+    add(sec, 'w', r[3])
+    add(sec, 'n', 1)
+  }
+  for (const r of ds.holdings_by_date[baseDate] || []) {
+    add(sectors[r[0]] ?? '未分類', 'pw', r[3])
+  }
+  return [...acc.entries()]
+    .map(([sector, v]) => ({ sector, weight: v.w, prevWeight: v.pw, dWeight: v.w - v.pw, count: v.n }))
+    .sort((a, b) => b.weight - a.weight)
+}
+
 export interface StockPoint {
   date: string
   shares: number

@@ -6,6 +6,8 @@ on:
   schedule:
     - cron: '30 10 * * 1-5'
   workflow_dispatch: {}
+  push:
+    branches: [main]   # 程式碼更新即重佈署（bot 的資料 commit 帶 [skip ci] 不會觸發）
 
 permissions:
   contents: write   # commit 更新後的 dataset/snapshots
