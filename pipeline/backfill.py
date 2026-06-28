@@ -60,6 +60,7 @@ def backfill():
             got += 1
         time.sleep(0.2)                              # be polite to the server
     print(f"backfill done: {got} trading days saved, {empty} non-trading skipped, {errs} errors")
+    return errs
 
 
 def build_dataset():

@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import ReactECharts from 'echarts-for-react'
+import { Chart } from '../Chart'
 import type { Dataset } from '../../data/types'
 import { holdingsMap, tradingDates } from '../../data/analytics'
 
@@ -64,7 +64,7 @@ export function Heatmap({ ds, dark, onSelect }: Props) {
   return (
     <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-3">
       <div className="text-sm font-medium mb-2">每日持股變化熱力圖（前 {TOP_N} 大持股 × 全期；紅=加碼、綠=減碼）</div>
-      <ReactECharts option={option} style={{ height: 760 }} notMerge onEvents={onEvents} />
+      <Chart option={option} style={{ height: 760 }} notMerge onEvents={onEvents} />
       <p className="text-xs text-gray-400 mt-1">色階上限裁切於 ±{cap} 張以保留對比；點格子可開個股明細。</p>
     </div>
   )

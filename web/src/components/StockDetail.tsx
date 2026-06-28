@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import ReactECharts from 'echarts-for-react'
+import { Chart } from './Chart'
 import type { Dataset } from '../data/types'
 import { stockSeries, stockSummary } from '../data/analytics'
 import { fmtInt, fmtLots, fmtPct, fmtSignedLots, upDown } from '../lib/format'
@@ -117,11 +117,11 @@ export function StockDetail({ ds, code, dark, isWatched, onToggleWatch, onClose 
           </div>
 
           <Panel title="持股張數走勢 ＆ 權重">
-            <ReactECharts option={lotsOption} style={{ height: 280 }} notMerge />
+            <Chart option={lotsOption} style={{ height: 280 }} notMerge />
           </Panel>
 
           <Panel title="每日買賣超（張）">
-            <ReactECharts option={flowOption} style={{ height: 220 }} notMerge />
+            <Chart option={flowOption} style={{ height: 220 }} notMerge />
           </Panel>
 
           <Panel

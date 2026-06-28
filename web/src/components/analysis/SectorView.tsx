@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import ReactECharts from 'echarts-for-react'
+import { Chart } from '../Chart'
 import type { Dataset } from '../../data/types'
 import { sectorAgg } from '../../data/analytics'
 import { fmtSignedPct, upDown } from '../../lib/format'
@@ -38,7 +38,7 @@ export function SectorView({ ds, sectors, start, end, dark }: Props) {
     <div className="grid lg:grid-cols-2 gap-3">
       <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-3">
         <div className="text-sm font-medium mb-1">產業權重分布（{end}）</div>
-        <ReactECharts option={pie} style={{ height: 340 }} notMerge />
+        <Chart option={pie} style={{ height: 340 }} notMerge />
       </div>
       <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-3">
         <div className="text-sm font-medium mb-2">產業權重變化（{start} → {end}）</div>

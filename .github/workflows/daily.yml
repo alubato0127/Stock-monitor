@@ -21,14 +21,17 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      fetch_failed: ${{ steps.pipeline.outputs.fetch_failed }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
       - name: Fetch + rebuild dataset + notify
+        id: pipeline
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
@@ -38,7 +41,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/ web/public/dataset.json
+          git add data/ web/public/dataset.json web/public/sectors.json
           if git diff --cached --quiet; then
             echo "no data changes"
           else
@@ -46,7 +49,7 @@ jobs:
             git push
           fi
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '22'
           cache: npm
@@ -72,3 +75,14 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # Fails the run (→ GitHub emails the repo owner) if fetch failed, but only
+  # AFTER a successful deploy so alerting never blocks publishing fresh data.
+  alert:
+    needs: [build, deploy]
+    if: ${{ needs.build.outputs.fetch_failed == '1' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "::error::Daily fetch from FH Trust failed — investigate the endpoint."
+          exit 1

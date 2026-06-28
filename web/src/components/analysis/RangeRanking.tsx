@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import ReactECharts from 'echarts-for-react'
+import { Chart } from '../Chart'
 import type { Dataset } from '../../data/types'
 import { diffRows, type ChangeRow } from '../../data/analytics'
 
@@ -43,10 +43,10 @@ export function RangeRanking({ ds, start, end, dark, onSelect }: Props) {
   return (
     <div className="grid md:grid-cols-2 gap-3">
       <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-3">
-        <ReactECharts option={opt(buys, '#e11d48', '加碼 Top 15（張）')} style={{ height: 360 }} notMerge onEvents={onEvents} />
+        <Chart option={opt(buys, '#e11d48', '加碼 Top 15（張）')} style={{ height: 360 }} notMerge onEvents={onEvents} />
       </div>
       <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-3">
-        <ReactECharts option={opt(sells, '#059669', '減碼 Top 15（張）')} style={{ height: 360 }} notMerge onEvents={onEvents} />
+        <Chart option={opt(sells, '#059669', '減碼 Top 15（張）')} style={{ height: 360 }} notMerge onEvents={onEvents} />
       </div>
     </div>
   )

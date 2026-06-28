@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import ReactECharts from 'echarts-for-react'
+import { Chart } from './Chart'
 import type { Dataset } from '../data/types'
 import { holdingsMap, tradingDates } from '../data/analytics'
 import { useSectors } from '../data/useSectors'
@@ -122,10 +122,10 @@ function FundTrends({ ds, dark }: { ds: Dataset; dark: boolean }) {
   return (
     <div className="grid lg:grid-cols-2 gap-3">
       <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-3">
-        <ReactECharts option={aumOption} style={{ height: 300 }} notMerge />
+        <Chart option={aumOption} style={{ height: 300 }} notMerge />
       </div>
       <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-3">
-        <ReactECharts option={concOption} style={{ height: 300 }} notMerge />
+        <Chart option={concOption} style={{ height: 300 }} notMerge />
       </div>
     </div>
   )
